@@ -40,6 +40,8 @@ kotlin {
             implementation(libs.ktor.client.resources)
             api(libs.androidx.datastore.preferences.core)
             api(libs.androidx.datastore.core)
+            implementation(libs.coil.compose)
+            implementation(libs.coil.network)
         }
         androidMain.dependencies {
             implementation(libs.ktor.client.android)
