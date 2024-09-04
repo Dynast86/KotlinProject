@@ -42,6 +42,7 @@ kotlin {
             api(libs.androidx.datastore.core)
             implementation(libs.coil.compose)
             implementation(libs.coil.network)
+            implementation(libs.androidx.navigation.compose)
         }
         androidMain.dependencies {
             implementation(libs.ktor.client.android)
