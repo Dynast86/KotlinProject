@@ -6,6 +6,10 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
+
+    alias(libs.plugins.kotlinxSerialization)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.room)
 }
 
 kotlin {
@@ -15,7 +19,7 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -26,29 +30,57 @@ kotlin {
             isStatic = true
         }
     }
-    
+
     sourceSets {
-        
+
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.lifecycle.viewmodel)
-            implementation(libs.androidx.lifecycle.runtime.compose)
+//            implementation(libs.androidx.lifecycle.runtime.compose)
             implementation(libs.koin.androidx.compose)
             implementation(libs.ktor.client.android)
+
+            implementation(libs.ktor.client.android)
+            implementation(libs.kotlinx.coroutines.android)
+            implementation(libs.androidx.room.paging)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material)
+            implementation(compose.material3)
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
-            implementation(projects.shared)
+
+            implementation(libs.koin.core)
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.ktor.client.logging)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.androidx.room.runtime)
+            implementation(libs.ktor.client.resources)
+            api(libs.androidx.datastore.preferences.core)
+            api(libs.androidx.datastore.core)
+            implementation(libs.coil.compose)
+            implementation(libs.coil.network)
+            implementation(libs.androidx.navigation.compose)
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.kotlinx.datetime)
 
             implementation(libs.androidx.lifecycle.runtime.compose)
             implementation(libs.androidx.lifecycle.viewmodel.compose)
-            implementation(libs.androidx.navigation.compose)
+
+            implementation(libs.androidx.compose.material3)
+            implementation(libs.androidx.compose.material3.adaptive)
+            implementation(libs.androidx.compose.material3.adaptive.layout)
+            implementation(libs.androidx.compose.material3.adaptive.navigation)
+            implementation(libs.androidx.compose.material3.adaptive.navigation.suite)
+        }
+
+        iosMain.dependencies {
+            implementation(libs.ktor.client.darwin)
         }
     }
 }
@@ -90,3 +122,6 @@ android {
     }
 }
 
+room {
+    schemaDirectory("$projectDir/schemas")
+}

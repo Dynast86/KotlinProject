@@ -1,26 +1,22 @@
 package org.example.project
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.BottomAppBar
-import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Button
-import androidx.compose.material.FabPosition
-import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,22 +26,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import kotlinproject.composeapp.generated.resources.Res
-import kotlinproject.composeapp.generated.resources.compose_multiplatform
+import kotlinproject.composeapp.generated.resources.ic_check
 import org.example.project.ui.AppViewModel
+import org.example.project.ui.list.ReportUiState
+import org.example.project.ui.list.content.ListItemContent
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview
 fun App(
-    viewModel: AppViewModel = viewModel { AppViewModel() },
+    viewModel: AppViewModel,
     navController: NavHostController = rememberNavController()
 ) {
     MaterialTheme {
@@ -54,67 +52,55 @@ fun App(
         var clicked by remember { mutableStateOf(0) }
 
         Scaffold(
-            modifier = Modifier.safeDrawingPadding(),
             topBar = {
-                TopAppBar(title = { Text("Top app bar") })
-            },
-            bottomBar = {
-                BottomAppBar(
-                    modifier = Modifier.height(80.dp)
-                        .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)),
-                    contentColor = Color.White,
-                    backgroundColor = Color.Red,
-                    cutoutShape = CircleShape,
-                ) {
-                    BottomNavigationItem(
-                        modifier = Modifier.weight(1f),
-                        selected = clicked == 0,
-                        icon = {},
-                        label = { Text("Home", fontSize = 16.sp) },
-                        onClick = { clicked = 0 }
+                TopAppBar(title = {
+                    Text(
+                        "SalesReport", maxLines = 1, overflow = TextOverflow.Ellipsis
                     )
-                    Spacer(modifier = Modifier.width(88.dp))
-                    BottomNavigationItem(
-                        modifier = Modifier.weight(1f),
-                        selected = clicked == 2,
-                        icon = {},
-                        label = { Text("More", fontSize = 16.sp) },
-                        onClick = { clicked = 2 }
-                    )
-                }
+                })
             },
-            floatingActionButtonPosition = FabPosition.Center,
-            isFloatingActionButtonDocked = true,
             floatingActionButton = {
                 FloatingActionButton(
-                    modifier = Modifier.size(72.dp),
+                    modifier = Modifier.padding(16.dp),
                     onClick = { }) {
                     Icon(
-                        painterResource(Res.drawable.compose_multiplatform),
-                        contentDescription = "Add"
+                        painterResource(Res.drawable.ic_check),
+                        contentDescription = "저장하기"
                     )
                 }
-            }
+            },
+            containerColor = MaterialTheme.colorScheme.surface,
         ) { innerPadding ->
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
+            Box(
+                modifier = Modifier.padding(innerPadding)
+                    .fillMaxSize()
             ) {
-                Button(onClick = {
-                    viewModel.changeContentState()
-                    viewModel.setClickCount()
-                }) {
-                    Text("Click me! $uiState")
-                }
-                AnimatedVisibility(showContent) {
-                    val greeting = remember { Greeting().greet() }
-                    Column(
-                        Modifier.fillMaxWidth(),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Image(painterResource(Res.drawable.compose_multiplatform), null)
-                        Text("Compose: $greeting")
+                when (uiState) {
+                    is ReportUiState.Success -> {
+                        val data = (uiState as ReportUiState.Success).data
+                        LazyColumn(
+                            modifier = Modifier
+                                .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+                                .fillMaxWidth()
+                                .background(
+                                    color = Color.White,
+                                    shape = RoundedCornerShape(24.dp)
+                                ),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(4.dp),
+                            contentPadding = PaddingValues(16.dp),
+                        ) {
+                            items(data.keys.size) {
+                                val index = data.keys.elementAt(it)
+                                if (data[index] == null) return@items
+
+                                ListItemContent(key = index, item = data[index]!!)
+                            }
+                        }
                     }
+
+                    ReportUiState.Error -> Unit
+                    ReportUiState.Loading -> Unit
                 }
             }
         }
