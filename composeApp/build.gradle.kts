@@ -59,6 +59,7 @@ kotlin {
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.ktor.client.logging)
             implementation(libs.ktor.client.content.negotiation)
+//            implementation(libs.androidx.room.compiler)
             implementation(libs.androidx.room.runtime)
             implementation(libs.ktor.client.resources)
             api(libs.androidx.datastore.preferences.core)

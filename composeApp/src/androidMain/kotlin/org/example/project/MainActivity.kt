@@ -13,10 +13,6 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge()
 
-        val viewModel: AppViewModel by inject()
-
-        setContent {
-            App(viewModel)
-        }
+        setContent { App() }
     }
 }

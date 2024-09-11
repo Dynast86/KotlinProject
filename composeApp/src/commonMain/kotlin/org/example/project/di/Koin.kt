@@ -12,9 +12,12 @@ import io.ktor.http.URLBuilder
 import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+import org.example.project.data.repository.LoginRepository
 import org.example.project.data.repository.SalesReportRepository
 import org.example.project.domain.SalesReportRepositoryImpl
+import org.example.project.domain.LoginRepositoryImpl
 import org.example.project.ui.AppViewModel
+import org.example.project.ui.login.LoginViewModel
 import org.koin.core.context.startKoin
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
@@ -59,10 +62,12 @@ private val networkModule = module {
 }
 
 private val repositoryModule = module {
+    singleOf(::LoginRepositoryImpl).bind<LoginRepository>()
     singleOf(::SalesReportRepositoryImpl).bind<SalesReportRepository>()
 }
 
 private val viewModelModule = module {
     single { AppViewModel() }
+    single { LoginViewModel() }
 //    single { UnitPriceViewModel(get()) }
 }
