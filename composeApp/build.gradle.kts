@@ -10,16 +10,15 @@ plugins {
     alias(libs.plugins.kotlinxSerialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
+    alias(libs.plugins.kotlinCocoapods)
+
 }
 
-//dependencies {
-//    add("kspAndroid", libs.androidx.room.compiler)
-//    add("kspIosSimulatorArm64", libs.androidx.room.compiler)
-//    add("kspIosX64", libs.androidx.room.compiler)
-//    add("kspIosArm64", libs.androidx.room.compiler)
-//}
-
 kotlin {
+    sourceSets.commonMain {
+        kotlin.srcDir("build/generated/ksp/metadata")
+    }
+
     androidTarget {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
@@ -38,20 +37,38 @@ kotlin {
         }
     }
 
+    cocoapods {
+        summary = "Some description for the Shared Module"
+        homepage = "Link to the Shared Module homepage"
+        version = "1.0"
+        ios.deploymentTarget = "17.4"
+        podfile = project.file("../iosApp/Podfile")
+        framework {
+            baseName = "shared"
+            isStatic = true
+        }
+//        pod("lottie-ios") {
+//            version = "4.4.3"
+//            linkOnly = true
+//        }
+    }
+
     sourceSets {
 
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.lifecycle.viewmodel)
-//            implementation(libs.androidx.lifecycle.runtime.compose)
+
+            implementation(libs.koin.android)
             implementation(libs.koin.androidx.compose)
-            implementation(libs.ktor.client.android)
 
             implementation(libs.ktor.client.android)
             implementation(libs.kotlinx.coroutines.android)
             implementation(libs.androidx.room.paging)
+            implementation(libs.androidx.room.runtime.android)
         }
+
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
@@ -61,13 +78,18 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
 
-            implementation(libs.koin.core)
+            api(libs.koin.core)
+            implementation(libs.koin.compose)
+            implementation(libs.koin.composeVM)
+
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.ktor.client.logging)
             implementation(libs.ktor.client.content.negotiation)
-//            implementation(libs.androidx.room.compiler)
+
             implementation(libs.androidx.room.runtime)
+            implementation(libs.sqlite.bundled)
+
             implementation(libs.ktor.client.resources)
             api(libs.androidx.datastore.preferences.core)
             api(libs.androidx.datastore.core)
@@ -78,6 +100,7 @@ kotlin {
             implementation(libs.kotlinx.datetime)
 
             implementation(libs.androidx.lifecycle.runtime.compose)
+            implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.viewmodel.compose)
 
             implementation(libs.androidx.compose.material3)
@@ -86,6 +109,7 @@ kotlin {
             implementation(libs.androidx.compose.material3.adaptive.navigation)
             implementation(libs.androidx.compose.material3.adaptive.navigation.suite)
         }
+
 
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
@@ -134,6 +158,12 @@ room {
     schemaDirectory("$projectDir/schemas")
 }
 
-ksp {
-    arg("room.schemaLocation", "${projectDir}/schemas")
+dependencies {
+    add("kspCommonMainMetadata", libs.androidx.room.compiler)
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinCompile<*>>().configureEach {
+    if (name != "kspCommonMainKotlinMetadata") {
+        dependsOn("kspCommonMainKotlinMetadata")
+    }
 }
