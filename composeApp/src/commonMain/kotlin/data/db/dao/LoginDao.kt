@@ -1,10 +1,10 @@
-package database.dao
+package data.db.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
-import database.entity.LoginEntity
+import data.db.entity.LoginEntity
 
 @Dao
 interface LoginDao {

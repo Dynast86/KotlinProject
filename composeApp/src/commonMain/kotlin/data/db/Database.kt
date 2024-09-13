@@ -1,25 +1,25 @@
-package database
+package data.db
 
-import androidx.room.ConstructedBy
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import androidx.room.RoomDatabaseConstructor
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
-import database.dao.LoginDao
-import database.entity.LoginEntity
+import data.db.dao.LoginDao
+import data.db.entity.LoginEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 
+internal const val dbFileName = "my_room.data.db"
+
 @Database(entities = [LoginEntity::class], version = 1)
-@ConstructedBy(AppDatabaseConstructor::class)
-abstract class AppDatabase : RoomDatabase() {
+abstract class AppDatabase : RoomDatabase() , DB{
     abstract fun getLoginDao(): LoginDao
+    override fun clearAllTables() {}
 }
 
-@Suppress("NO_ACTUAL_FOR_EXPECT")
-expect object AppDatabaseConstructor : RoomDatabaseConstructor<AppDatabase> {
-    override fun initialize(): AppDatabase
+interface DB {
+    fun clearAllTables()
 }
+
 
 fun getRoomDatabase(
     builder: RoomDatabase.Builder<AppDatabase>

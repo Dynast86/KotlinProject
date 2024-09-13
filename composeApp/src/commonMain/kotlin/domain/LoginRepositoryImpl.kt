@@ -4,7 +4,8 @@ import io.ktor.client.HttpClient
 import data.Service.getLoginInfo
 import data.model.EmployeeModel
 import data.repository.LoginRepository
-import database.AppDatabase
+import data.db.AppDatabase
+import data.db.entity.LoginEntity
 import util.Response
 import util.Result
 
@@ -20,7 +21,7 @@ class LoginRepositoryImpl(
         return apiService.getLoginInfo(id = employee, password = password)
     }
 
-//    override suspend fun putLoginInfo(entity: LoginEntity) {
-//        data.database.getLoginDao().insert(entity)
-//    }
+    override suspend fun putLoginInfo(entity: LoginEntity) {
+        database.getLoginDao().insert(entity)
+    }
 }

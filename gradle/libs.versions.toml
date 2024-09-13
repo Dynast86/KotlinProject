@@ -18,7 +18,7 @@ ktor = "3.0.0-beta-2"
 coroutines = "1.8.1"
 ksp = "2.0.20-1.0.24"
 
-room = "2.7.0-alpha07"
+room = "2.7.0-alpha01"
 datastore = "1.1.1"
 coil = "3.0.0-alpha10"
 androidx-navigation = "2.7.0-alpha07"

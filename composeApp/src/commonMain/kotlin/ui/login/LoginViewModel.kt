@@ -9,7 +9,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import data.model.toEntity
 import data.repository.LoginRepository
-import database.entity.LoginEntity
+import data.db.entity.LoginEntity
 import util.Result
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -42,7 +42,7 @@ class LoginViewModel : ViewModel(), KoinComponent {
 
     private fun putLoginInfo(entity: LoginEntity) = viewModelScope.launch {
         withContext(Dispatchers.IO) {
-//            loginRepository.putLoginInfo(entity)
+            loginRepository.putLoginInfo(entity)
         }
     }
 }

@@ -1,7 +1,7 @@
 package data.model
 
 import kotlinx.serialization.Serializable
-import database.entity.LoginEntity
+import data.db.entity.LoginEntity
 
 @Serializable
 data class EmployeeModel(
