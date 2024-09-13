@@ -78,19 +78,23 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
 
+            // Koin
             api(libs.koin.core)
             implementation(libs.koin.compose)
             implementation(libs.koin.composeVM)
 
+            // Ktor
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.ktor.client.logging)
             implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.client.resources)
 
+            // Room
             implementation(libs.androidx.room.runtime)
             implementation(libs.sqlite.bundled)
 
-            implementation(libs.ktor.client.resources)
+            // DataStore
             api(libs.androidx.datastore.preferences.core)
             api(libs.androidx.datastore.core)
             implementation(libs.coil.compose)
@@ -108,8 +112,10 @@ kotlin {
             implementation(libs.androidx.compose.material3.adaptive.layout)
             implementation(libs.androidx.compose.material3.adaptive.navigation)
             implementation(libs.androidx.compose.material3.adaptive.navigation.suite)
-        }
 
+            // Kotlin Lottie
+            implementation(libs.kottie)
+        }
 
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
