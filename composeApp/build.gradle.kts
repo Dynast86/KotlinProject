@@ -96,7 +96,10 @@ kotlin {
 
             // DataStore
             api(libs.androidx.datastore.preferences.core)
-            api(libs.androidx.datastore.core)
+            api(libs.androidx.datastore.core.okio)
+            implementation(libs.kotlinx.atomicfu)
+
+            // Coil
             implementation(libs.coil.compose)
             implementation(libs.coil.network)
             implementation(libs.androidx.navigation.compose)

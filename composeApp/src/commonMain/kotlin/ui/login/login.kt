@@ -44,6 +44,9 @@ fun login(
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
 
+    val info = viewModel.info.collectAsStateWithLifecycle()
+    println("info : ${info.value}")
+
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
 

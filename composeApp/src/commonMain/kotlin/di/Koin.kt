@@ -1,5 +1,6 @@
 package di
 
+import data.preferenceModule
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -32,6 +33,7 @@ fun initKoin(config: KoinAppDeclaration? = null) = startKoin {
     config?.invoke(this)
     modules(
         networkModule,
+        preferenceModule,
         repositoryModule,
         viewModelModule,
         platformModule(),
